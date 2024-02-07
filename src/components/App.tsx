@@ -2,13 +2,14 @@ import { useState } from "react";
 import { useQuery } from "@apollo/client";
 
 // ------------------------------ UI LIBRARY COMPONENTS ------------------------------
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
+import CssBaseline from "@mui/material/CssBaseline";
 import Modal from "@mui/material/Modal";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Typography from "@mui/material/Typography";
 
 // ------------------------------ CUSTOM COMPONENTS ------------------------------
 import Section from "./Section";
@@ -19,7 +20,6 @@ import { GET_MENU } from "../queries/getMenu";
 // ------------------------------ STYLES ------------------------------
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../styles/theme";
-
 const style = {
   position: "absolute",
   top: "50%",
@@ -32,29 +32,58 @@ const style = {
   p: 4,
 };
 
+// ------------------------------ Types ------------------------------
+import type { Item } from "../__generated__/graphql";
+import type { Section as SectionType } from "../__generated__/graphql";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
 function App() {
   const { loading, error, data } = useQuery(GET_MENU);
-  const [value, setValue] = useState(0);
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [selectedItem, setSelectedItem] = useState(undefined);
+  const [currentTabIndex, setCurrentTabIndex] = useState(0);
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpen = () => setOpenModal(true);
+  const handleClose = () => setOpenModal(false);
+  const [selectedItem, setSelectedItem] = useState<Item | undefined>(undefined);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <Container maxWidth="lg">
+        <Box
+          sx={{
+            height: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress sx={{ color: "#fa5553" }} />
+        </Box>
+      </Container>
+    );
+  }
+
   if (error) return <p>Error : {error.message}</p>;
 
   const { menu } = data;
 
-  const handleCardClick = (item) => {
+  const handleCardClick = (item: Item) => {
     setSelectedItem(item);
     handleOpen();
   };
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const handleTabClick = (
+    event: React.SyntheticEvent,
+    newValue: number,
+  ): void => {
+    setCurrentTabIndex(newValue);
   };
 
-  function TabPanel(props) {
+  function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
 
     return (
@@ -79,16 +108,20 @@ function App() {
       <CssBaseline />
 
       <Container maxWidth="lg">
-        <Box sx={{ height: "100vh", display: "flex" }}>
-          <Tabs orientation="vertical" value={value} onChange={handleChange}>
-            {menu.sections.map((section) => {
+        <Box sx={{ height: "100vh", display: "flex", paddingTop: "2.5rem" }}>
+          <Tabs
+            orientation="vertical"
+            value={currentTabIndex}
+            onChange={handleTabClick}
+          >
+            {menu.sections.map((section: SectionType) => {
               return <Tab label={section.label} key={section.id} />;
             })}
           </Tabs>
 
-          {menu.sections.map((section, index) => {
+          {menu.sections.map((section: SectionType, index: number) => {
             return (
-              <TabPanel value={value} index={index} key={section.id}>
+              <TabPanel value={currentTabIndex} index={index} key={section.id}>
                 <Section section={section} handleCardClick={handleCardClick} />
               </TabPanel>
             );
@@ -96,7 +129,7 @@ function App() {
         </Box>
 
         <Modal
-          open={open}
+          open={openModal}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
