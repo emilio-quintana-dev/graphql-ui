@@ -10,14 +10,22 @@ export const GET_MENU = gql`
         identifier
         label
         description
-        displayOrder
+        disabled
         items {
           id
           type
           identifier
           label
+          disabled
           description
           price
+          items {
+            id
+            label
+            disabled
+            description
+            price
+          }
         }
       }
     }

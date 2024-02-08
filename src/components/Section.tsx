@@ -17,8 +17,8 @@ interface Props {
 
 const Section = ({ section, handleCardClick }: Props) => {
   return (
-    <Box>
-      <Typography variant="h3">{section.label}</Typography>
+    <Box sx={{ marginBottom: "2.5rem" }}>
+      <Typography variant="h4">{section.label}</Typography>
 
       <Typography sx={{ marginBottom: "1rem" }}>
         {section.description}
@@ -26,15 +26,30 @@ const Section = ({ section, handleCardClick }: Props) => {
 
       <Grid container spacing={2}>
         {section.items.map((item) => {
-          return (
-            <Grid item xs={12} md={6} key={item.id}>
-              <ItemCard
-                key={item.id}
-                item={item}
-                handleCardClick={handleCardClick}
-              />
-            </Grid>
-          );
+          if (item.items?.length) {
+            return item.items.map((subItem) => {
+              return (
+                <Grid item xs={12} md={4} key={subItem.id}>
+                  <ItemCard
+                    key={subItem.id}
+                    baseLabel={item.label}
+                    item={subItem}
+                    handleCardClick={handleCardClick}
+                  />
+                </Grid>
+              );
+            });
+          } else {
+            return (
+              <Grid item xs={12} md={4} key={item.id}>
+                <ItemCard
+                  key={item.id}
+                  item={item}
+                  handleCardClick={handleCardClick}
+                />
+              </Grid>
+            );
+          }
         })}
       </Grid>
     </Box>
