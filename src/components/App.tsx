@@ -2,17 +2,18 @@ import { useState } from "react";
 import { useQuery } from "@apollo/client";
 
 // ------------------------------ UI LIBRARY COMPONENTS ------------------------------
+import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Container from "@mui/material/Container";
-import CssBaseline from "@mui/material/CssBaseline";
-import Modal from "@mui/material/Modal";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Typography from "@mui/material/Typography";
 
 // ------------------------------ CUSTOM COMPONENTS ------------------------------
 import Section from "./Section";
+import DisabledSection from "./DisabledSection";
+import ItemModal from "./ItemModal";
 
 // ------------------------------ GRAPHQL ------------------------------
 import { GET_MENU } from "../queries/getMenu";
@@ -20,17 +21,6 @@ import { GET_MENU } from "../queries/getMenu";
 // ------------------------------ STYLES ------------------------------
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../styles/theme";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 
 // ------------------------------ Types ------------------------------
 import type { Item } from "../__generated__/graphql";
@@ -85,6 +75,33 @@ function App() {
 
   function TabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
+    const isAllTab = index === 0;
+
+    if (isAllTab && value === 0) {
+      return (
+        <div
+          role="tabpanel"
+          hidden={false}
+          id={`vertical-tabpanel-all`}
+          aria-labelledby={`vertical-tab-all`}
+          {...other}
+        >
+          <Box sx={{ px: 3 }}>
+            {menu.sections.map((section: SectionType) =>
+              section.disabled ? (
+                <DisabledSection section={section} key={section.id} />
+              ) : (
+                <Section
+                  section={section}
+                  handleCardClick={handleCardClick}
+                  key={section.id}
+                />
+              ),
+            )}
+          </Box>
+        </div>
+      );
+    }
 
     return (
       <div
@@ -107,47 +124,60 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Box sx={{ height: "100vh", display: "flex", paddingTop: "2.5rem" }}>
           <Tabs
             orientation="vertical"
             value={currentTabIndex}
             onChange={handleTabClick}
+            sx={{
+              minWidth: "15%",
+              textAlign: "left",
+              ".Mui-selected": {
+                borderLeft: "2px solid #fa5553",
+                borderColor: "primary.main",
+              },
+              "& .MuiTabs-indicator": {
+                right: "100%",
+                left: "auto",
+              },
+            }}
           >
+            <Tab label="All" />
             {menu.sections.map((section: SectionType) => {
               return <Tab label={section.label} key={section.id} />;
             })}
           </Tabs>
 
+          <TabPanel value={currentTabIndex} index={0}></TabPanel>
+
           {menu.sections.map((section: SectionType, index: number) => {
             return (
-              <TabPanel value={currentTabIndex} index={index} key={section.id}>
-                <Section section={section} handleCardClick={handleCardClick} />
+              <TabPanel
+                value={currentTabIndex}
+                index={index + 1}
+                key={section.id}
+              >
+                {section.disabled ? (
+                  <DisabledSection section={section} />
+                ) : (
+                  <Section
+                    section={section}
+                    handleCardClick={handleCardClick}
+                  />
+                )}
               </TabPanel>
             );
           })}
         </Box>
 
-        <Modal
-          open={openModal}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            {selectedItem && (
-              <>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  {selectedItem.label}
-                </Typography>
-
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  {selectedItem.description}
-                </Typography>
-              </>
-            )}
-          </Box>
-        </Modal>
+        {selectedItem && (
+          <ItemModal
+            openModal={openModal}
+            handleClose={handleClose}
+            item={selectedItem}
+          />
+        )}
       </Container>
     </ThemeProvider>
   );
