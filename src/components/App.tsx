@@ -67,7 +67,7 @@ function App() {
   };
 
   const handleTabClick = (
-    event: React.SyntheticEvent,
+    _event: React.SyntheticEvent,
     newValue: number,
   ): void => {
     setCurrentTabIndex(newValue);
