@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ------------------------------ UI LIBRARY COMPONENTS ------------------------------
 import Button from "@mui/material/Button";
@@ -38,6 +38,12 @@ interface Props {
 
 const ItemModal = ({ openModal, handleClose, item }: Props) => {
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!openModal) {
+      setCount(0);
+    }
+  }, [openModal]);
 
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => setCount(Math.max(count - 1, 0));
