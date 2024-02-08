@@ -14,12 +14,6 @@ interface Props {
   section: Section;
 }
 
-const style = {
-  display: "flex",
-  bgcolor: "background.paper",
-  height: 300,
-};
-
 const DisabledSection = ({ section }: Props) => {
   const sampleItem = section.items[0];
 
@@ -31,7 +25,13 @@ const DisabledSection = ({ section }: Props) => {
         Only available on Fri, Sat and Sun.
       </Typography>
 
-      <Card sx={style}>
+      <Card
+        sx={{
+          display: "flex",
+          bgcolor: "background.paper",
+          height: 300,
+        }}
+      >
         <CardMedia
           component="img"
           sx={{ width: 400 }}

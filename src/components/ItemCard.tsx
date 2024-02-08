@@ -52,6 +52,7 @@ const ItemCard = ({ item, baseLabel, handleCardClick }: Props) => {
           </Typography>
         </CardContent>
       </CardActionArea>
+
       <CardActions sx={{ padding: "1rem", justifyContent: "space-between" }}>
         <Typography variant="body2" color="text.secondary">
           {item.price}

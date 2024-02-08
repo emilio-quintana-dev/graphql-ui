@@ -21,6 +21,18 @@ import { GET_MENU } from "../queries/getMenu";
 // ------------------------------ STYLES ------------------------------
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../styles/theme";
+const tabsStyle = {
+  minWidth: "15%",
+  textAlign: "left",
+  ".Mui-selected": {
+    borderLeft: "2px solid #fa5553",
+    borderColor: "primary.main",
+  },
+  "& .MuiTabs-indicator": {
+    right: "100%",
+    left: "auto",
+  },
+};
 
 // ------------------------------ Types ------------------------------
 import type { Item } from "../__generated__/graphql";
@@ -33,12 +45,14 @@ interface TabPanelProps {
 }
 
 function App() {
-  const { loading, error, data } = useQuery(GET_MENU);
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
   const [openModal, setOpenModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item | undefined>(undefined);
+
+  const { loading, error, data } = useQuery(GET_MENU);
+
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
-  const [selectedItem, setSelectedItem] = useState<Item | undefined>(undefined);
 
   if (loading) {
     return (
@@ -125,23 +139,17 @@ function App() {
       <CssBaseline />
 
       <Container maxWidth="xl">
-        <Box sx={{ height: "100vh", display: "flex", paddingTop: "2.5rem" }}>
+        <Box
+          sx={{
+            display: "flex",
+            paddingTop: "2.5rem",
+          }}
+        >
           <Tabs
             orientation="vertical"
             value={currentTabIndex}
             onChange={handleTabClick}
-            sx={{
-              minWidth: "15%",
-              textAlign: "left",
-              ".Mui-selected": {
-                borderLeft: "2px solid #fa5553",
-                borderColor: "primary.main",
-              },
-              "& .MuiTabs-indicator": {
-                right: "100%",
-                left: "auto",
-              },
-            }}
+            sx={tabsStyle}
           >
             <Tab label="All" />
             {menu.sections.map((section: SectionType) => {
