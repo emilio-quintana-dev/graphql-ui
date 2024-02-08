@@ -28,7 +28,6 @@ const style = {
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  // p: 4,
 };
 
 interface Props {
@@ -38,7 +37,7 @@ interface Props {
 }
 
 const ItemModal = ({ openModal, handleClose, item }: Props) => {
-  const [count, setCount] = useState(0); // Counter state
+  const [count, setCount] = useState(0);
 
   const incrementCount = () => setCount(count + 1);
   const decrementCount = () => setCount(Math.max(count - 1, 0));
@@ -54,7 +53,7 @@ const ItemModal = ({ openModal, handleClose, item }: Props) => {
         <CardMedia
           component="img"
           sx={{ width: 400 }}
-          image="https://source.unsplash.com/random?pizza"
+          image={`https://source.unsplash.com/random?pizza?sig=${item.id}`}
           alt="Live from space album cover"
         />
 

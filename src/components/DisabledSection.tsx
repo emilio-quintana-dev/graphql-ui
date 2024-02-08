@@ -17,6 +17,7 @@ interface Props {
 const style = {
   display: "flex",
   bgcolor: "background.paper",
+  height: 300,
 };
 
 const DisabledSection = ({ section }: Props) => {

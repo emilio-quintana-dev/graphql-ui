@@ -18,12 +18,13 @@ interface Props {
 const Section = ({ section, handleCardClick }: Props) => {
   return (
     <Box sx={{ marginBottom: "2.5rem" }}>
-      <Typography variant="h4">{section.label}</Typography>
+      <Typography variant="h4" component="div">
+        {section.label}
+      </Typography>
 
       <Typography sx={{ marginBottom: "1rem" }}>
         {section.description}
       </Typography>
-
       <Grid container spacing={2}>
         {section.items.map((item) => {
           if (item.items?.length) {
