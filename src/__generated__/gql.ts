@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query GetMenu {\n    menu(id: \"1\") {\n      id\n      label\n      sections {\n        id\n        identifier\n        label\n        description\n        displayOrder\n        items {\n          id\n          type\n          identifier\n          label\n          description\n          price\n        }\n      }\n    }\n  }\n": types.GetMenuDocument,
+    "\n  query GetMenu {\n    menu(id: \"1\") {\n      id\n      label\n      sections {\n        id\n        identifier\n        label\n        description\n        displayOrder\n        items {\n          id\n          type\n          identifier\n          label\n          description\n          price\n          items {\n            label\n            description\n            price\n          }\n        }\n      }\n    }\n  }\n": types.GetMenuDocument,
 };
 
 /**
@@ -33,7 +33,7 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetMenu {\n    menu(id: \"1\") {\n      id\n      label\n      sections {\n        id\n        identifier\n        label\n        description\n        displayOrder\n        items {\n          id\n          type\n          identifier\n          label\n          description\n          price\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetMenu {\n    menu(id: \"1\") {\n      id\n      label\n      sections {\n        id\n        identifier\n        label\n        description\n        displayOrder\n        items {\n          id\n          type\n          identifier\n          label\n          description\n          price\n        }\n      }\n    }\n  }\n"];
+export function gql(source: "\n  query GetMenu {\n    menu(id: \"1\") {\n      id\n      label\n      sections {\n        id\n        identifier\n        label\n        description\n        displayOrder\n        items {\n          id\n          type\n          identifier\n          label\n          description\n          price\n          items {\n            label\n            description\n            price\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetMenu {\n    menu(id: \"1\") {\n      id\n      label\n      sections {\n        id\n        identifier\n        label\n        description\n        displayOrder\n        items {\n          id\n          type\n          identifier\n          label\n          description\n          price\n          items {\n            label\n            description\n            price\n          }\n        }\n      }\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
