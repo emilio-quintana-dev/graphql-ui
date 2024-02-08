@@ -10,7 +10,7 @@ import {
 import App from "./components/App.tsx";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000",
+  uri: "https://grain-533d3b6e735d.herokuapp.com",
 });
 
 const client = new ApolloClient({
